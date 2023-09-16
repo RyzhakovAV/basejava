@@ -26,13 +26,26 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if((String.valueOf(storage[i])).equals(uuid)) {
+                index = i;
+                i = size;
+            }
+        }
+        System.out.println(index);
+        if(index == size - 1) {
+            storage[index] = null;
+        }else{
+            for (int i = index; i < size; i++) {
+                storage[i] = storage[i + 1];
+            }
+            storage[size - 1] = null;
+        }
         size--;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
+
     Resume[] getAll() {
         Resume[] copyArray;
         copyArray = Arrays.copyOf(storage, size);
