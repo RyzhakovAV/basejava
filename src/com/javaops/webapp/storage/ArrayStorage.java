@@ -31,8 +31,11 @@ public class ArrayStorage {
 
     public void update(Resume r, String uuid) {
         int index = findIndex(r.getUuid());
-        if (index != -1) {
+        int newUuid = findIndex(uuid);
+        if (index != -1 && newUuid == -1) {
             r.setUuid(uuid);
+        } else {
+            System.out.println("Ошибка обновления данных");
         }
     }
 
