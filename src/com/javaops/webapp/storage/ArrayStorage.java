@@ -9,63 +9,59 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void save(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index == -1) {
+        if (size == STORAGE_LIMIT) {
+            System.out.println("Добавление не возможно, массив переполнен");
+        }else if (findIndex(r.getUuid()) != -1) {
+            System.out.printf("Добавление невозможно. %s существует\n", r.getUuid());
+        } else {
             storage[size] = r;
             size++;
-        } else {
-            System.out.printf("Добавление невозможно. %s существует\n", r.getUuid());
         }
     }
 
-    public void update(Resume r, String uuid) {
+    public void update(Resume r) {
         int index = findIndex(r.getUuid());
-        int newUuid = findIndex(uuid);
-        if (index != -1 && newUuid == -1) {
-            r.setUuid(uuid);
+        if (index != -1) {
+            storage[index] = r;
         } else {
             System.out.println("Ошибка обновления данных");
         }
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                return storage[i];
-            }
+        int index = findIndex(uuid);
+        if(index != -1) {
+            return storage[index];
+        } else {
+            System.out.println("Данные не найдены");
+            return null;
         }
-        return null;
     }
 
     public void delete(String uuid) {
         int index = findIndex(uuid);
-        if (index == size - 1) {
-            storage[index] = null;
+        if (index != -1) {
+            storage[index] = storage[size -1];
+            storage[size-1] = null;
+            size--;
         } else {
-            for (int i = index; i < size; i++) {
-                storage[i] = storage[i + 1];
-            }
-            storage[size - 1] = null;
+            System.out.println("Данные не найдены. Ошибка удаления.");
         }
-        size--;
     }
 
 
     public Resume[] getAll() {
-        Resume[] copyArray;
-        copyArray = Arrays.copyOf(storage, size);
-        return copyArray;
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
     public int size() {
