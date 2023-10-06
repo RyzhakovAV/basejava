@@ -9,12 +9,12 @@ public abstract class AbstractArrayStorage implements Storage{
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    public void clear() {
+    public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public void update(Resume r) {
+    public final void update(Resume r) {
         int index = findIndex(r.getUuid());
         if (index > 0) {
             storage[index] = r;
@@ -23,7 +23,7 @@ public abstract class AbstractArrayStorage implements Storage{
         }
     }
 
-    public void save(Resume r) {
+    public final void save(Resume r) {
         int index = findIndex(r.getUuid());
         if (size == STORAGE_LIMIT) {
             System.out.println("Добавление не возможно, массив переполнен");
@@ -35,7 +35,7 @@ public abstract class AbstractArrayStorage implements Storage{
         }
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if(index >= 0) {
             return storage[index];
@@ -45,7 +45,7 @@ public abstract class AbstractArrayStorage implements Storage{
         }
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
             fillDeleteElement(index);
@@ -56,11 +56,11 @@ public abstract class AbstractArrayStorage implements Storage{
         }
     }
 
-    public Resume[] getAll() {
+    public final Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    public int size() {
+    public final int size() {
         return size;
     }
 
