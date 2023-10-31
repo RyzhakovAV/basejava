@@ -1,5 +1,8 @@
 package com.javaops.webapp.storage;
 
+import com.javaops.webapp.exception.ExistStorageException;
+import com.javaops.webapp.exception.NotExistStorageException;
+import com.javaops.webapp.exception.StorageException;
 import com.javaops.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -19,16 +22,16 @@ public abstract class AbstractArrayStorage implements Storage{
         if (index > 0) {
             storage[index] = r;
         } else {
-            System.out.println("Ошибка обновления данных");
+            throw new NotExistStorageException(r.getUuid());
         }
     }
 
     public final void save(Resume r) {
         int index = findIndex(r.getUuid());
         if (size == STORAGE_LIMIT) {
-            System.out.println("Добавление не возможно, массив переполнен");
+            throw new StorageException("Array overflow", r.getUuid());
         }else if (index >= 0) {
-            System.out.printf("Добавление невозможно. %s существует\n", r.getUuid());
+            throw new ExistStorageException(r.getUuid());
         } else {
             insertElement(r, index);
             size++;
@@ -40,8 +43,7 @@ public abstract class AbstractArrayStorage implements Storage{
         if(index >= 0) {
             return storage[index];
         } else {
-            System.out.println("Данные не найдены");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -52,7 +54,7 @@ public abstract class AbstractArrayStorage implements Storage{
             storage[size-1] = null;
             size--;
         } else {
-            System.out.println("Данные не найдены. Ошибка удаления.");
+            throw new NotExistStorageException(uuid);
         }
     }
 
