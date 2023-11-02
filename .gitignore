@@ -1,7 +1,9 @@
+##Directory
 .idea
 out
+##test
+lib
+
+##File
 *.iml
 log
-
-
-
